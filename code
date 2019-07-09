@@ -34,12 +34,14 @@ void setup(){
 
 
 void draw(){
-  background(0);
-  //manageTail();
-  drawFood();
-  drawSnake();
-  move();
-  collision();
+  if(end == false){
+    background(0);
+    manageTail();
+    drawFood();
+    drawSnake();
+    move();
+    collision();
+  }
 }
 
 void drawFood(){
@@ -57,15 +59,23 @@ void drawSnake(){
 void move(){
   switch(direction){
     case "up":
+      tailX.add(head.xPos);
+      tailY.add(head.yPos);
       head.yPos = head.yPos - 10;
       break;
     case "down":
+      tailX.add(head.xPos);
+      tailY.add(head.yPos);
       head.yPos = head.yPos + 10;
       break;
     case "left":
+      tailX.add(head.xPos);
+      tailY.add(head.yPos);
       head.xPos = head.xPos - 10;
       break;
     case "right":
+      tailX.add(head.xPos);
+      tailY.add(head.yPos);
       head.xPos = head.xPos + 10;
       break;
   }
@@ -99,6 +109,8 @@ void collision(){
 }  
 
 ArrayList <Segment> tail = new ArrayList<Segment>();
+ArrayList <Integer> tailX = new ArrayList<Integer>();
+ArrayList <Integer> tailY = new ArrayList<Integer>();
 
 void manageTail(){
   drawTail();
@@ -106,19 +118,39 @@ void manageTail(){
   Segment a = new Segment(head.xPos,head.yPos);
   tail.add(a);
   if (tail.size() > stomach){
-    tail.remove();
+    tail.remove(0);
+    tailX.remove(0);
+    tailY.remove(0);
   }
   
 }
 
 void drawTail(){
-  
+  for(int i = 0; i<tail.size(); i++){
+    
+    rect(tailX.get(i),tailY.get(i),10,10);
+  }
 }
 void checkTailCollision(){
-
+  for(int i=0; i<tailX.size()-1; i++){
+     if(head.xPos==tailX.get(i)&&head.yPos==tailY.get(i)){
+       gameOver();
+     }
+  }
+  if(head.xPos>501 || head.xPos<-1){
+    gameOver();
+  }
+  if(head.yPos>501 || head.yPos<-1){
+    gameOver();
+  }
 }
-  
+boolean end = false;
 void gameOver(){
-  
-  
+  end = true;
+  fill(0,0,0);
+  rect(0,0,500,500);
+  fill(30,200,30);
+  textSize(50);
+  text("GAME OVER",110,240);
 }
+
